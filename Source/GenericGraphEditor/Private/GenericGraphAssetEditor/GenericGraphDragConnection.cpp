@@ -8,6 +8,7 @@
 #include "EdGraph/EdGraph.h"
 #include "SGraphPanel.h"
 #include "ScopedTransaction.h"
+#include "GenericGraphAssetEditor/EdNode_GenericGraphNode.h"
 
 TSharedRef<FGenericGraphDragConnection> FGenericGraphDragConnection::New(const TSharedRef<SGraphPanel>& GraphPanel, const FDraggedPinTable& DraggedPins)
 {

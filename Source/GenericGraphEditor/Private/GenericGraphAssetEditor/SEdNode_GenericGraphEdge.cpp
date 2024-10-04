@@ -8,6 +8,7 @@
 #include "GenericGraphAssetEditor/EdNode_GenericGraphNode.h"
 #include "GenericGraphAssetEditor/EdNode_GenericGraphEdge.h"
 #include "GenericGraphAssetEditor/ConnectionDrawingPolicy_GenericGraph.h"
+#include "GenericGraphEdge.h"
 
 #define LOCTEXT_NAMESPACE "SGenericGraphEdge"
 
