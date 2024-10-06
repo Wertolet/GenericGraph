@@ -1,5 +1,8 @@
 #include "GenericGraphAssetEditor/SEdNode_GenericGraphNode.h"
+
+#include "EditorUtilityWidget.h"
 #include "GenericGraphEditorPCH.h"
+#include "GenericGraphNodeCustomWidget.h"
 #include "GenericGraphAssetEditor/Colors_GenericGraph.h"
 #include "SLevelOfDetailBranchNode.h"
 #include "Widgets/Text/SInlineEditableTextBlock.h"
@@ -7,6 +10,7 @@
 #include "SlateOptMacros.h"
 #include "SGraphPin.h"
 #include "GraphEditorSettings.h"
+#include "GenericGraphAssetEditor/EdGraph_GenericGraph.h"
 #include "GenericGraphAssetEditor/EdNode_GenericGraphNode.h"
 #include "GenericGraphAssetEditor/GenericGraphDragConnection.h"
 
@@ -102,7 +106,38 @@ void SEdNode_GenericGraphNode::UpdateGraphNode()
 	TSharedPtr<SVerticalBox> NodeBody;
 	TSharedPtr<SNodeTitle> NodeTitle = SNew(SNodeTitle, GraphNode);
 
+	UEdNode_GenericGraphNode* GenericNode = Cast<UEdNode_GenericGraphNode>(GraphNode);
+	UEditorUtilityWidget* CustomWidget = nullptr;
+	if (IsValid(GenericNode))
+	{
+		UEdGraph_GenericGraph* GenericEdGraph = GenericNode->GetGenericGraphEdGraph();
+		if (IsValid(GenericEdGraph))
+		{
+			UGenericGraph* GenericGraph = GenericEdGraph->GetGenericGraph();
+			if (IsValid(GenericGraph) && IsValid(GenericGraph->CustomWidget))
+			{
+				TSubclassOf<UEditorUtilityWidget> UMGWidgetClass = GenericGraph->CustomWidget;
+				UWorld* World = GEditor->GetEditorWorldContext().World();
+				if (IsValid(World))
+				{
+					CustomWidget = CreateWidget<UEditorUtilityWidget>(World, UMGWidgetClass);
+					if (UMGWidgetClass->ImplementsInterface(UGenericGraphNodeCustomWidget::StaticClass()))
+					{
+						IGenericGraphNodeCustomWidget::Execute_SetNode(CustomWidget, GenericNode->GenericGraphNode);
+					}
+				}
+			}
+		}
+	}
+
+	TSharedRef<SBorder> CusomWidgetBorder =	SNew(SBorder).Padding(0.0f);
 	this->ContentScale.Bind(this, &SGraphNode::GetContentScale);
+	if (IsValid(CustomWidget))
+	{
+		TSharedRef<SWidget> SlateWidget = CustomWidget->TakeWidget();
+		CusomWidgetBorder->SetContent(SlateWidget);
+	}
+	
 	this->GetOrAddSlot(ENodeZone::Center)
 		.HAlign(HAlign_Fill)
 		.VAlign(VAlign_Center)
@@ -149,7 +184,7 @@ void SEdNode_GenericGraphNode::UpdateGraphNode()
 					.Padding(6.0f)
 					[
 						SAssignNew(NodeBody, SVerticalBox)
-									
+								
 						// Title
 						+ SVerticalBox::Slot()
 						.AutoHeight()
@@ -173,7 +208,7 @@ void SEdNode_GenericGraphNode::UpdateGraphNode()
 								SNew(SImage)
 								.Image(NodeTypeIcon)
 							]
-										
+									
 							// Node Title
 							+ SHorizontalBox::Slot()
 							.Padding(FMargin(4.0f, 0.0f, 4.0f, 0.0f))
@@ -196,7 +231,12 @@ void SEdNode_GenericGraphNode::UpdateGraphNode()
 									NodeTitle.ToSharedRef()
 								]
 							]
-						]					
+						]
+						+ SVerticalBox::Slot()
+						.AutoHeight()
+						[
+							CusomWidgetBorder
+						]
 					]
 				]
 			]

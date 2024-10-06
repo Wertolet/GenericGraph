@@ -47,7 +47,9 @@ public class GenericGraphEditor : ModuleRules
                 "Kismet",
                 "KismetWidgets",
                 "ApplicationCore",
-				"ToolMenus",
+				"ToolMenus", 
+				"Blutility",
+				"UMG"
 				// ... add private dependencies that you statically link with here ...
 			}
 			);

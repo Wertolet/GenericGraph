@@ -56,5 +56,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "GenericGraph_Editor")
 	bool bCanBeCyclical;
+
+	UPROPERTY(EditDefaultsOnly, Category= "GenericGraph_Editor")
+	TSubclassOf<UEditorUtilityWidget> CustomWidget;
 #endif
 };
