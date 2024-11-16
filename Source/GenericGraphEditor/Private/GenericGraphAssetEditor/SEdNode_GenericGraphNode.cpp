@@ -116,12 +116,12 @@ void SEdNode_GenericGraphNode::UpdateGraphNode()
 			UGenericGraph* GenericGraph = GenericEdGraph->GetGenericGraph();
 			if (IsValid(GenericGraph) && IsValid(GenericGraph->CustomWidget))
 			{
-				TSubclassOf<UEditorUtilityWidget> UMGWidgetClass = GenericGraph->CustomWidget;
+				TSubclassOf<UUserWidget> UMGWidgetClass = GenericGraph->CustomWidget;
 				UWorld* World = GEditor->GetEditorWorldContext().World();
 				if (IsValid(World))
 				{
-					CustomWidget = CreateWidget<UEditorUtilityWidget>(World, UMGWidgetClass);
-					if (UMGWidgetClass->ImplementsInterface(UGenericGraphNodeCustomWidget::StaticClass()))
+					CustomWidget = Cast<UEditorUtilityWidget>(CreateWidget<UUserWidget>(World, UMGWidgetClass));
+					if (IsValid(CustomWidget) && UMGWidgetClass->ImplementsInterface(UGenericGraphNodeCustomWidget::StaticClass()))
 					{
 						IGenericGraphNodeCustomWidget::Execute_SetNode(CustomWidget, GenericNode->GenericGraphNode);
 					}
