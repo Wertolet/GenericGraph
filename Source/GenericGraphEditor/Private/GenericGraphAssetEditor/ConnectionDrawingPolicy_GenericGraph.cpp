@@ -72,8 +72,8 @@ void FConnectionDrawingPolicy_GenericGraph::Internal_DrawLineWithArrow(const FVe
 	// Come up with the final start/end points
 	const FVector2D DirectionBias = Normal * LineSeparationAmount;
 	const FVector2D LengthBias = ArrowRadius.X * UnitDelta;
-	const FVector2D StartPoint = StartAnchorPoint + DirectionBias + LengthBias;
-	const FVector2D EndPoint = EndAnchorPoint + DirectionBias - LengthBias;
+	const FVector2f StartPoint = FVector2f(StartAnchorPoint + DirectionBias + LengthBias);
+	const FVector2f EndPoint = FVector2f(EndAnchorPoint + DirectionBias - LengthBias);
 
 	// Draw a line/spline
 	DrawConnection(WireLayerID, StartPoint, EndPoint, Params);

@@ -591,7 +591,7 @@ void FAssetEditor_GenericGraph::PasteNodes()
 	TSharedPtr<SGraphEditor> CurrentGraphEditor = GetCurrGraphEditor();
 	if (CurrentGraphEditor.IsValid())
 	{
-		PasteNodesHere(CurrentGraphEditor->GetPasteLocation());
+		PasteNodesHere(CurrentGraphEditor->GetPasteLocation2f());
 	}
 }
 
